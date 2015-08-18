@@ -1,0 +1,21 @@
+{
+  "name": "photoextractor",
+  "version": "0.0.1",
+  "description": "Extract photo from scanned document",
+  "main": "app.js",
+  "dependencies": {
+    "opencv": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "opencv",
+    "document",
+    "open",
+    "data"
+  ],
+  "author": "Yohan Totting",
+  "license": "ISC"
+}
