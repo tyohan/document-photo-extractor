@@ -56,7 +56,7 @@ var cropPhoto=function(files){
                     }
                   }
 
-                  if(faces.length>0 && bigest_face!==null){
+                  if(faces.length>0 && bigest_face!==null && bigest_face.width > 120 && bigest_face.height > 160){
                     var padding=Math.round(bigest_face.width/3);
                     var imWidth=bigest_face.width+(padding*2);
                     var imHeight=Math.round(imWidth*(4/3));
@@ -64,6 +64,8 @@ var cropPhoto=function(files){
                     //console.log('Image saved to '.face);
                     console.log(facepath);
                     im.save(facepath);
+                  } else {
+                    console.log('eliminated face as Page 2 artifact');
                   }
                   
                   console.log('Files left:'+files.length);
