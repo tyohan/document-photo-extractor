@@ -1,1 +1,5 @@
-npm_modules
+.DS_Store
+node_modules
+tmp
+color_images
+*.log
