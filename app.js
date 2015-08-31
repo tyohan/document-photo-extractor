@@ -56,14 +56,29 @@ var cropPhoto=function(files){
                     }
                   }
 
+                  
                   if(faces.length>0 && bigest_face!==null && bigest_face.width > 120 && bigest_face.height > 160){
                     var padding=Math.round(bigest_face.width/3);
-                    var imWidth=bigest_face.width+(padding*2);
-                    var imHeight=Math.round(imWidth*(4/3));
-                    im=im.roi(bigest_face.x-padding, bigest_face.y-padding, imWidth, imHeight);
-                    //console.log('Image saved to '.face);
-                    console.log(facepath);
-                    im.save(facepath);
+                    var photox=bigest_face.x-padding;
+                    var photoy=bigest_face.y-padding;
+                    if(photox>0 && photoy>0){
+                        
+                        var imWidth=bigest_face.width+(padding*2);
+                        var imHeight=Math.round(imWidth*(4/3));
+                        console.log('Document size x:'+width+',y:'+height);
+                        
+                        console.log('Photo size:');
+                        console.log(bigest_face);
+                        im=im.roi(photox, photoy, imWidth, imHeight);
+                        console.log('Cropped photo');
+                        im.save(facepath);
+                        console.log('Image saved to '+facepath);
+                    }
+                    else{
+                      console.log(bigest_face);
+                      console.log('Position not allowed x:'+photox+', y:'+photoy);
+                    }
+                    
                   } else {
                     console.log('eliminated face as Page 2 artifact');
                   }
