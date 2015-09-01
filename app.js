@@ -65,6 +65,9 @@ var cropPhoto=function(files){
                         
                         var imWidth=bigest_face.width+(padding*2);
                         var imHeight=Math.round(imWidth*(4/3));
+                        if ((photox+imWidth)>width) {
+                          photox=width-imWidth;
+                        };
                         console.log('Document size x:'+width+',y:'+height);
                         
                         console.log('Photo size:');
