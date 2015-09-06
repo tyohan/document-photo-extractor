@@ -21,8 +21,8 @@ String.prototype.getFileName = function() {
 
 fs.readdir(path, function(err, files){
         cropPhoto(files)
-          
-   
+
+
 });
 
 var cropPhoto=function(files){
@@ -32,7 +32,21 @@ var cropPhoto=function(files){
           console.log(isImage(image));
           if(isImage(image)){
               var file=path+'/'+image;
+              image=image.replace('jpg','png');
+              var facepath='./tmp/'+image;
+
+              if (fs.existsSync(facepath)) {
+                if(files.length>0) {
+                  console.log('not remaking this image');
+                  cropPhoto(files);
+                } else {
+                  console.log('finished');
+                }
+                return;
+              }
+
                console.log('detecting face on file '+image);
+
                cv.readImage(file, function(err, im) {
                 if (err) throw err;
                 var width = im.width();
@@ -41,13 +55,11 @@ var cropPhoto=function(files){
 
                 im.detectObject(cv.FACE_CASCADE, {}, function(err, faces){
                   if (err) throw err;
-                  image=image.replace('jpg','png');
-                  var facepath='./tmp/'+image;
-                 
+
                   console.log('Found '+faces.length+' face\'s on '+image );
                   var biggest=0;
                   var bigest_face=null;
-                  
+
                   for (var i = 0; i < faces.length; i++) {
                     var area=faces[i].width*faces[i].height;
                     if(area>biggest){
@@ -56,20 +68,20 @@ var cropPhoto=function(files){
                     }
                   }
 
-                  
-                  if(faces.length>0 && bigest_face!==null && bigest_face.width > 120 && bigest_face.height > 160){
+
+                  if(faces.length>0 && bigest_face!==null){
                     var padding=Math.round(bigest_face.width/3);
                     var photox=bigest_face.x-padding;
                     var photoy=bigest_face.y-padding;
                     if(photox>0 && photoy>0){
-                        
+
                         var imWidth=bigest_face.width+(padding*2);
                         var imHeight=Math.round(imWidth*(4/3));
                         if ((photox+imWidth)>width) {
                           photox=width-imWidth;
                         };
                         console.log('Document size x:'+width+',y:'+height);
-                        
+
                         console.log('Photo size:');
                         console.log(bigest_face);
                         im=im.roi(photox, photoy, imWidth, imHeight);
@@ -81,15 +93,15 @@ var cropPhoto=function(files){
                       console.log(bigest_face);
                       console.log('Position not allowed x:'+photox+', y:'+photoy);
                     }
-                    
+
                   } else {
                     console.log('eliminated face as Page 2 artifact');
                   }
-                  
+
                   console.log('Files left:'+files.length);
                   if(files.length>0)
                       cropPhoto(files);
-                  
+
                 });
 
               });
