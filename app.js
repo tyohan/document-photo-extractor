@@ -2,6 +2,7 @@ var cv = require('./node_modules/opencv/lib/opencv');
 var fs = require('fs');
 var lowThresh =10;
 var highThresh = 150;
+var yThresh=1000;
 var nIters = 2;
 var maxArea = 2500;
 
@@ -61,13 +62,13 @@ var cropPhoto=function(files){
                   var bigest_face=null;
 
                   for (var i = 0; i < faces.length; i++) {
+                    console.log(faces[i]);
                     var area=faces[i].width*faces[i].height;
-                    if(area>biggest){
+                    if(area>biggest && faces[i].y<yThresh){
                       biggest=area;
                       bigest_face=faces[i];
                     }
                   }
-
 
                   if(faces.length>0 && bigest_face!==null){
                     var padding=Math.round(bigest_face.width/3);
@@ -80,12 +81,16 @@ var cropPhoto=function(files){
                         if ((photox+imWidth)>width) {
                           photox=width-imWidth;
                         };
+                        if((photoy+imHeight)>height){
+                          photoy=height-imHeight;
+                        }
                         console.log('Document size x:'+width+',y:'+height);
 
                         console.log('Photo size:');
                         console.log(bigest_face);
+                         console.log('Cropping photo x:'+photox+',y:'+photoy+',tox:'+(photox+imWidth)+',toy:'+(photoy+imHeight));
                         im=im.roi(photox, photoy, imWidth, imHeight);
-                        console.log('Cropped photo');
+
                         im.save(facepath);
                         console.log('Image saved to '+facepath);
                     }
